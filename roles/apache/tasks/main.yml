@@ -1,0 +1,25 @@
+- name: Install Apache
+  dnf:
+    name: httpd
+    state: present
+
+- name: Deploy index.php
+  copy:
+    content: "<?php phpinfo(); ?>"
+    dest: /var/www/html/index.php
+  notify: Restart Apache
+
+- block:
+    - name: Ensure Apache is running
+      systemd:
+        name: httpd
+        state: started
+        enabled: true
+  rescue:
+    - name: Apache failed to start
+      debug:
+        msg: "Failed to start Apache!"
+  always:
+    - name: Apache setup attempted
+      debug:
+        msg: "Apache setup attempted"

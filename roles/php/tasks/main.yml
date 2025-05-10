@@ -1,0 +1,5 @@
+- name: Install PHP
+  dnf:
+    name: php
+    state: present
+  notify: Restart Apache
